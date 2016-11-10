@@ -30,7 +30,7 @@
 #include<System.h>
 
 using namespace std;
-
+void SaveMapToFile(const string &filename);
 void LoadImages(const string &strPathLeft, const string &strPathRight, const string &strPathTimes,
                 vector<string> &vstrImageLeft, vector<string> &vstrImageRight, vector<double> &vTimeStamps);
 
@@ -185,7 +185,10 @@ int main(int argc, char **argv)
 
     // Save camera trajectory
     SLAM.SaveTrajectoryTUM("CameraTrajectory.txt");
-
+	SLAM.SaveKeyFrameTrajectoryTUM("KeyFrameTrajectory.txt");
+    
+	/*Map* mpMap = SLAM.GetMap();*/
+	SLAM.SaveMapToFile("MapPoints.txt");
     return 0;
 }
 
@@ -209,8 +212,9 @@ void LoadImages(const string &strPathLeft, const string &strPathRight, const str
             vstrImageRight.push_back(strPathRight + "/" + ss.str() + ".png");
             double t;
             ss >> t;
-            vTimeStamps.push_back(t/1e9);
+            vTimeStamps.push_back(t/20);
 
         }
     }
 }
+

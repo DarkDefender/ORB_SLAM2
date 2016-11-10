@@ -111,6 +111,9 @@ public:
     // TODO: Save/Load functions
     // SaveMap(const string &filename);
     // LoadMap(const string &filename);
+	void SaveMapToFile(const string &filename);
+	//Map* GetMap();
+
 
 private:
 

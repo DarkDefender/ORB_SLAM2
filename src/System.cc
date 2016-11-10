@@ -335,7 +335,7 @@ void System::SaveTrajectoryTUM(const string &filename)
 
         vector<float> q = Converter::toQuaternion(Rwc);
 
-        f << setprecision(6) << *lT << " " <<  setprecision(9) << twc.at<float>(0) << " " << twc.at<float>(1) << " " << twc.at<float>(2) << " " << q[0] << " " << q[1] << " " << q[2] << " " << q[3] << endl;
+        f << setprecision(6) << *lT*20 << " " <<  setprecision(9) << twc.at<float>(0) << " " << twc.at<float>(1) << " " << twc.at<float>(2) << " " << q[0] << " " << q[1] << " " << q[2] << " " << q[3] << endl;
     }
     f.close();
     cout << endl << "trajectory saved!" << endl;
@@ -369,7 +369,7 @@ void System::SaveKeyFrameTrajectoryTUM(const string &filename)
         cv::Mat R = pKF->GetRotation().t();
         vector<float> q = Converter::toQuaternion(R);
         cv::Mat t = pKF->GetCameraCenter();
-        f << setprecision(6) << pKF->mTimeStamp << setprecision(7) << " " << t.at<float>(0) << " " << t.at<float>(1) << " " << t.at<float>(2)
+        f << setprecision(6) << 20* pKF->mTimeStamp << setprecision(7) << " " << t.at<float>(0) << " " << t.at<float>(1) << " " << t.at<float>(2)
           << " " << q[0] << " " << q[1] << " " << q[2] << " " << q[3] << endl;
 
     }
@@ -432,5 +432,51 @@ void System::SaveTrajectoryKITTI(const string &filename)
     f.close();
     cout << endl << "trajectory saved!" << endl;
 }
+
+/* return map */
+void System::SaveMapToFile(const string &filename){
+    /* saves maps to pcd file */
+	std::cout << endl << "Saving Map to " << filename << "..." << endl;
+	//std::vector<MapPoint*> mpPoints = mpMap->GetAllMapPoints();
+	std::vector<cv::Mat> pointVector;
+	for( auto point : mpMap->GetAllMapPoints() ){
+		cv::Mat coords = point->GetWorldPos();
+		if(point->isBad())
+			continue;
+		pointVector.push_back(coords);
+	}
+	
+
+	std::ofstream f;
+	f.open(filename.c_str());
+	f << fixed;
+	/* print pcd header to file */
+	f << "VERSION .7" << std::endl
+		<< "FIELDS x y z" << std::endl
+		<< "SIZE 4 4 4" << std::endl
+		<< "TYPE F F F" << std::endl
+		<< "COUNT 1 1 1" << std::endl
+		<< "WIDTH " << pointVector.size() << std::endl
+		<< "HEIGHT 1" << std::endl
+		<< "VIEWPOINT 0 0 0 1 0 0 0" << std::endl
+		<< "POINTS " << pointVector.size() << std::endl
+		<< "DATA ascii" << std::endl;
+	/* loop through all points and print to file */
+
+	f << setprecision(7);
+	for(unsigned i = 0; i < pointVector.size(); i++){
+		cv::Mat coords = pointVector.at(i);
+		/*f << setprecision(6)
+		  << point->mnId 
+		  << setprecision(7) */
+
+		f  << coords.at<float>(0, 0)
+			<< " " << coords.at<float>(1, 0)
+			<< " " << coords.at<float>(2, 0)
+			<< std::endl;
+	}
+	cout << "Map points saved!" << endl;
+}
+
 
 } //namespace ORB_SLAM
