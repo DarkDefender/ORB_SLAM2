@@ -69,17 +69,17 @@ int main(int argc, char **argv)
     }
 
     cv::Mat K_l, K_r, P_l, P_r, R_l, R_r, D_l, D_r;
-    fsSettings["LEFT.K"] >> K_l;
-    fsSettings["RIGHT.K"] >> K_r;
+    fsSettings["K1"] >> K_l;
+    fsSettings["K2"] >> K_r;
 
-    fsSettings["LEFT.P"] >> P_l;
-    fsSettings["RIGHT.P"] >> P_r;
+    fsSettings["P1"] >> P_l;
+    fsSettings["P2"] >> P_r;
 
-    fsSettings["LEFT.R"] >> R_l;
-    fsSettings["RIGHT.R"] >> R_r;
+    fsSettings["R1"] >> R_l;
+    fsSettings["R2"] >> R_r;
 
-    fsSettings["LEFT.D"] >> D_l;
-    fsSettings["RIGHT.D"] >> D_r;
+    fsSettings["D1"] >> D_l;
+    fsSettings["D2"] >> D_r;
 
     int rows_l = fsSettings["LEFT.height"];
     int cols_l = fsSettings["LEFT.width"];
@@ -188,7 +188,7 @@ int main(int argc, char **argv)
 	SLAM.SaveKeyFrameTrajectoryTUM("KeyFrameTrajectory.txt");
     
 	/*Map* mpMap = SLAM.GetMap();*/
-	SLAM.SaveMapToFile("MapPoints.txt");
+	SLAM.SaveMapToFile("ORB_SLAM_POINTS.pcd");
     return 0;
 }
 
